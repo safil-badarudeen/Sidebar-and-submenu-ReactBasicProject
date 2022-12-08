@@ -1,45 +1,46 @@
-import React, { useState, useContext } from "react";
-import { Children } from "react";
-import sublinks from "./data";
-
+import React, { useState, useContext } from 'react';
+import sublinks from './data';
 const AppContext = React.createContext();
 
-const AppProvider = ({ Children }) => {
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(true);
-
-  const openSideBar = () => {
-    setIsSideBarOpen(true);
+const AppProvider = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+  const [page, setPage] = useState({ page: '', links: [] });
+  const [location, setLocation] = useState({});
+  const openSidebar = () => {
+    setIsSidebarOpen(true);
   };
-
-  const closeSideBar = () => {
-    setIsSideBarOpen(false);
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
   };
-
-  const openSubMenu = () => {
-    setIsSubMenuOpen(true);
+  const openSubmenu = (text, coordinates) => {
+    const page = sublinks.find((link) => link.page === text);
+    setPage(page);
+    setLocation(coordinates);
+    setIsSubmenuOpen(true);
   };
-
-  const closeSubMenu = () => {
-    setIsSubMenuOpen(false);
+  const closeSubmenu = () => {
+    setIsSubmenuOpen(false);
   };
 
   return (
     <AppContext.Provider
       value={{
-        isSideBarOpen,
-        isSubMenuOpen,
-        openSideBar,
-        closeSideBar,
-        openSubMenu,
-        closeSubMenu,
+        isSidebarOpen,
+        openSidebar,
+        closeSidebar,
+        isSubmenuOpen,
+        openSubmenu,
+        closeSubmenu,
+        page,
+        location,
       }}
     >
-      {Children}
+      {children}
     </AppContext.Provider>
   );
 };
-
+// make sure use
 export const useGlobalContext = () => {
   return useContext(AppContext);
 };
